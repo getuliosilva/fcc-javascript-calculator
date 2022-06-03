@@ -1,0 +1,61 @@
+body {
+    background-color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    color: goldenrod;
+}
+
+.App {
+    text-align: end;
+}
+
+#title {
+    width: 260px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#display {
+    border: 1px solid gray;
+    border-radius: 5px;
+    color: whitesmoke;
+    font-size: 24px;
+    text-align: end;
+    overflow: scroll;
+    padding: 4px;
+    width: 260px;
+    margin: auto;
+}
+
+#keypad {
+    display: flex;
+    flex-direction: column;
+}
+
+.button-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.button-w1 {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    box-shadow: 2px 2px gray;
+}
+
+.button-w2 {
+    width: 130px;
+    height: 60px;
+    font-size: 20px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    box-shadow: 2px 2px gray;
+}
