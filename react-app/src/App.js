@@ -1,113 +1,11 @@
 import { useState } from 'react'
 import Button from './Button'
+import { buttonArray } from './buttonArray'
 import './global.css'
 
 function App() {
-  const [screenContent, setScreenContent] = useState('')
-  const [currentNumber, setCurrentNumber] = useState('')
-
-  const buttonArray = [
-    [
-      {
-        id: 'seven',
-        label: '7',
-        width: 1
-      },
-      {
-        id: 'eight',
-        label: '8',
-        width: 1
-      },
-      {
-        id: 'nine',
-        label: '9',
-        width: 1
-      },
-      {
-        id: 'add',
-        label: '+',
-        width: 1
-      }
-    ],
-    [
-      {
-        id: 'four',
-        label: '4',
-        width: 1
-      },
-      {
-        id: 'five',
-        label: '5',
-        width: 1
-      },
-      {
-        id: 'six',
-        label: '6',
-        width: 1
-      },
-      {
-        id: 'subtract',
-        label: '-',
-        width: 1
-      }
-    ],
-    [
-      {
-        id: 'one',
-        label: '1',
-        width: 1
-      },
-      {
-        id: 'two',
-        label: '2',
-        width: 1
-      },
-      {
-        id: 'three',
-        label: '3',
-        width: 1
-      },
-      {
-        id: 'multiply',
-        label: 'X',
-        width: 1
-      }
-    ],
-    [
-      {
-        id: 'zero',
-        label: '0',
-        width: 1
-      },
-      {
-        id: 'decimal',
-        label: '.',
-        width: 1
-      },
-      {
-        id: 'equals',
-        label: '=',
-        width: 1
-      },
-      {
-        id: 'divide',
-        label: '/',
-        width: 1
-      }
-    ],
-    [
-      {
-        id: 'clear',
-        label: 'C',
-        width: 2
-      },
-      {
-        id: 'erase',
-        label: 'E',
-        width: 2
-      }
-    ]
-  ]
+  const [screenContent, setScreenContent] = useState('0')
+  const [showResult, setShowResult] = useState(false)
 
   const keypad = buttonArray.map( element => {
     const buttonRow = element.map( innerObject => {
@@ -133,113 +31,186 @@ function App() {
       }
     }
 
-    console.log(keyObj)
+    processInput(keyObj)
+  }
 
-    switch(id){
-      case 'clear':
+  function processInput(keyObj){
+    if(showResult === true){
+      if(typeOfChar(keyObj.label) === 'number'){
         setScreenContent('')
-        setCurrentNumber('')
-        break
-      case 'erase'://INCOMPLETE(prev number)
-        if(screenContent !== ''){
-          setCurrentNumber(prev => prev.slice(0, -1))
-          setScreenContent(prev => prev.slice(0, -1))
-        }
-        break
-      case 'decimal':
-        if(!currentNumber.includes('.') && currentNumber !== ''){
-          setCurrentNumber(prev => prev + '.')
-          setScreenContent(prev => prev + '.')
-        }
-        break
-      case 'add':
-        if(currentNumber !== ''){
-          setCurrentNumber('')
-          setScreenContent(prev => prev + '+')
-        }
-      break
-      case 'subtract':
-        if(currentNumber !== ''){
-          setCurrentNumber('')
-          setScreenContent(prev => prev + '-')
-        }
-      break
-      case 'multiply':
-        if(currentNumber !== ''){
-          setCurrentNumber('')
-          setScreenContent(prev => prev + 'x')
-        }
-      break
-      case 'divide':
-        if(currentNumber !== ''){
-          setCurrentNumber('')
-          setScreenContent(prev => prev + '/')
-        }
-      break
-      case 'zero':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '0')
-          setScreenContent(prev => prev + '0')
-        }
-        break
-      case 'one':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '1')
-          setScreenContent(prev => prev + '1')
-        }
-        break
-      case 'two':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '2')
-          setScreenContent(prev => prev + '2')
-        }
-        break
-      case 'three':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '3')
-          setScreenContent(prev => prev + '3')
-        }
-        break
-      case 'four':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '4')
-          setScreenContent(prev => prev + '4')
-        }
-       break
-      case 'five':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '5')
-          setScreenContent(prev => prev + '5')
-        }
-        break
-      case 'six':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '6')
-          setScreenContent(prev => prev + '6')
-        }
-        break
-      case 'seven':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '7')
-          setScreenContent(prev => prev + '7')
-        }
-        break
-      case 'eight':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '8')
-          setScreenContent(prev => prev + '8')
-        }
-        break
-      case 'nine':
-        if(currentNumber !== '0'){
-          setCurrentNumber(prev => prev + '9')
-          setScreenContent(prev => prev + '9')
-        }
-        break
-      default:
-        console.log('DEFAULT')
-        break
+      }
+      setShowResult(false)
     }
+    if(typeOfChar(keyObj.label) === 'number'){
+      if(screenContent === '0'){ //calculator in initial state
+        if(keyObj.label !== '0'){
+          setScreenContent(keyObj.label)
+        }
+      }
+      else if(keyObj.label === '0'){
+        if(typeOfChar(screenContent[screenContent.length - 1]) === 'operation'){ //0 after operation
+          setScreenContent(prev => prev + keyObj.label)
+        }
+        else if(typeOfChar(screenContent[screenContent.length - 2]) === 'operation' && screenContent[screenContent.length - 1] !== '0'){ //0 after operation and non-zero number
+          setScreenContent(prev => prev + keyObj.label)
+        }
+        else if(typeOfChar(screenContent[screenContent.length - 2]) !== 'operation'){ //0 after any number
+          setScreenContent(prev => prev + keyObj.label)
+        }
+      }
+      else if(typeOfChar(screenContent[screenContent.length - 2]) === 'operation' && screenContent[screenContent.length - 1] !== '0'){ //no number after 0
+        setScreenContent(prev => prev + keyObj.label)
+      }
+      else if(typeOfChar(screenContent[screenContent.length - 2]) !== 'operation'){ //any number after any non-zero number
+        setScreenContent(prev => prev + keyObj.label)
+      }
+    }
+
+    else if(typeOfChar(keyObj.label) === 'operation'){
+      if(typeOfChar(screenContent[screenContent.length - 1]) !== 'operation'){ //append operation to number
+        setScreenContent(prev => prev + keyObj.label)
+      }
+      else{ // -- or overwrite operation
+        if(screenContent[screenContent.length - 1] === '-'){
+          if(screenContent[screenContent.length - 2] !== '-'){
+            if(keyObj.label === '-'){ //--
+              setScreenContent(prev => prev + keyObj.label)
+            }
+            else{ //overwrite -
+              setScreenContent(prev => {
+                let prevCopy = prev.slice(0, -1)
+                return prevCopy + keyObj.label
+              })
+            }
+          }
+          else{
+            if(keyObj.label !== '-'){ //--
+              setScreenContent(prev => {
+                let prevCopy = prev.slice(0, -2)
+                return prevCopy + keyObj.label
+              })
+            }
+          }
+        }
+        else{ //overwrite operation different than -
+          setScreenContent(prev => {
+            let prevCopy = prev.slice(0, -1)
+            return prevCopy + keyObj.label
+          })
+        }
+      }
+    }
+
+    else{
+      if(keyObj.label === 'C'){
+        setScreenContent('0')
+      }
+
+      else if(keyObj.label === '.'){
+        let hasDecimal = false
+
+        for(let i = screenContent.length - 1; i >= 0; i--){
+          if(typeOfChar(screenContent[i]) === 'operation'){
+            break
+          }
+          if(screenContent[i] === '.'){
+            hasDecimal = true
+            break
+          }
+        }
+        
+        if(hasDecimal === false){
+          setScreenContent(prev => prev + keyObj.label)
+        }
+      }
+
+      else if(keyObj.label === '='){
+        const lastScreenContent = screenContent.slice()
+        const clearExpression = clearScreenEnd(lastScreenContent)
+        const readyExpression = treatDoubleMinus(clearExpression)
+        const floatExpression = expressionToFloat(readyExpression)
+        // eslint-disable-next-line
+        setScreenContent(eval(floatExpression))
+        setShowResult(true)
+      }
+    }
+  }
+
+  function typeOfChar(char){
+    switch(char){
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        return 'number'
+      case '+':
+      case '-':
+      case '*':
+      case '/':
+        return 'operation'
+      default:
+        return 'other'
+    }
+  }
+
+  function clearScreenEnd(expression){
+    while(typeOfChar(expression[expression.length - 1]) !== 'number'){
+      expression = expression.slice(0, -1)
+    }
+    return expression
+  }
+
+  function treatDoubleMinus(expression){
+    let pos = 0
+
+    while(pos < expression.length - 2){
+      if(expression[pos] === '-' && expression[pos + 1] === '-'){
+        let openParenthesis = expression.indexOf('--') + 1
+        let closeParenthesis = openParenthesis + 1
+
+        while(typeOfChar(expression[closeParenthesis]) === 'number' && closeParenthesis < expression.length){
+          closeParenthesis++
+        }
+
+        let firstHalf = expression.slice(0, openParenthesis)
+        let secondHalf = expression.slice(openParenthesis)
+        expression = firstHalf + '(' + secondHalf
+
+        firstHalf = expression.slice(0, closeParenthesis + 1)
+        secondHalf = expression.slice(closeParenthesis + 1)
+        expression = firstHalf + ')' + secondHalf
+      }
+      pos++
+    }
+    return expression
+  }
+
+  function expressionToFloat(expression){
+    let pos = 0
+    let isFloat = false
+
+    while(pos < expression.length){
+      if(expression[pos] === '.'){
+        isFloat = true
+      }
+      if(typeOfChar(expression[pos]) === 'operation' || pos === expression.length){
+        if(isFloat === false){
+          let firstHalf = expression.slice(0, pos)
+          let secondHalf = expression.slice(pos)
+          expression = firstHalf + '.0' + secondHalf
+          pos += 2
+        }
+        isFloat = false
+      }
+      pos++
+    }
+    return expression
   }
 
   return (
@@ -254,7 +225,7 @@ function App() {
         {keypad}
       </div>
     </div>
-  );
+  )
 }
 
 export default App;
