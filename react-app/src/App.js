@@ -72,7 +72,7 @@ function App() {
       }
       else{ // -- or overwrite operation
         if(screenContent[screenContent.length - 1] === '-'){
-          if(screenContent[screenContent.length - 2] !== '-'){
+          if(typeOfChar(screenContent[screenContent.length - 2]) !== 'operation'){
             if(keyObj.label === '-'){ //--
               setScreenContent(prev => prev + keyObj.label)
             }
@@ -91,6 +91,9 @@ function App() {
               })
             }
           }
+        }
+        else if(keyObj.label === '-'){
+          setScreenContent(prev => prev + keyObj.label)
         }
         else{ //overwrite operation different than -
           setScreenContent(prev => {
@@ -170,8 +173,9 @@ function App() {
     let pos = 0
 
     while(pos < expression.length - 2){
-      if(expression[pos] === '-' && expression[pos + 1] === '-'){
-        let openParenthesis = expression.indexOf('--') + 1
+      //if(expression[pos] === '-' && expression[pos + 1] === '-'){
+      if(typeOfChar(expression[pos]) === 'operation' && expression[pos + 1] === '-'){  
+        let openParenthesis = pos + 1
         let closeParenthesis = openParenthesis + 1
 
         while(typeOfChar(expression[closeParenthesis]) === 'number' && closeParenthesis < expression.length){
