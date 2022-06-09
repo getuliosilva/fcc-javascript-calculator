@@ -20,11 +20,17 @@ body {
     color: whitesmoke;
     font-size: 24px;
     text-align: end;
-    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scrollbar-width: none;
     padding: 4px;
     width: 260px;
-    height: 25px;
+    height: 30px;
     margin: auto;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 #keypad {
